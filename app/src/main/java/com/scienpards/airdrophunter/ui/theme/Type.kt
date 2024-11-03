@@ -8,31 +8,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.scienpards.airdrophunter.R
 
-// Set of Material typography styles to start with
+
 val MorvaridFontFamily = FontFamily(
     Font(R.font.morvarid, FontWeight.Normal),
-//    Font(R.font.FarBeirut, FontWeight.Normal),
-)
+
+    )
 val FarBeirutFontFamily = FontFamily(
     Font(R.font.far_beirut, FontWeight.Normal),
-//    Font(R.font.FarBeirut, FontWeight.Normal),
-)
+
+    )
 val FarNazaninFontFamily = FontFamily(
     Font(R.font.far_nazanin, FontWeight.Normal),
-//    Font(R.font.FarBeirut, FontWeight.Normal),
-)
+
+    )
 val IranSansFontFamily = FontFamily(
     Font(R.font.iran_sans_fanum, FontWeight.Normal),
-//    Font(R.font.FarBeirut, FontWeight.Normal),
-)
+
+    )
 val YekanFontFamily = FontFamily(
     Font(R.font.yekan, FontWeight.Normal),
-//    Font(R.font.FarBeirut, FontWeight.Normal),
-)
+
+    )
 val B_ZarFontFamily = FontFamily(
     Font(R.font.b_zar_bold, FontWeight.Normal),
-//    Font(R.font.FarBeirut, FontWeight.Normal),
-)
+
+    )
 
 
 val Typography = Typography(
@@ -60,6 +60,11 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontSize = 16.sp,
         fontWeight = FontWeight.Normal,
+        fontFamily = IranSansFontFamily
+    ),
+    bodySmall = TextStyle(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
         fontFamily = IranSansFontFamily
     ),
     labelSmall = TextStyle(
