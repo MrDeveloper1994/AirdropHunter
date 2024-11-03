@@ -30,55 +30,12 @@ import kotlin.random.Random
 
 @Composable
 fun MainContent(innerPadding: PaddingValues) {
-    var color by remember { mutableStateOf(Color.Blue) }
-    var animationDuration by remember { mutableStateOf(1000L) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-
-            animationDuration = Random.nextLong(3000, 6000)
-
-
-            color = Color(
-                red = Random.nextFloat(),
-                green = Random.nextFloat(),
-                blue = Random.nextFloat(),
-                alpha = 1f
-            )
-
-            delay(animationDuration)
-        }
-    }
-
-
-
-
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = """
-           _         _                   _    _             _            
-     /\   (_)       | |                 | |  | |           | |           
-    /  \   _ _ __ __| |_ __ ___  _ __   | |__| |_   _ _ __ | |_ ___ _ __ 
-   / /\ \ | | '__/ _` | '__/ _ \| '_ \  |  __  | | | | '_ \| __/ _ \ '__|
-  / ____ \| | | | (_| | | | (_) | |_) | | |  | | |_| | | | | ||  __/ |   
- /_/    \_\_|_|  \__,_|_|  \___/| .__/  |_|  |_|\__,_|_| |_|\__\___|_|   
-                                | |                                      
-                                |_|                                      
-""".trimIndent(),
-            color = color,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 25.dp),
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontSize = 8.sp,
-                fontFamily = FontFamily.Monospace,
-                lineHeight = 14.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
-        )
-
+        AirdropHunterLogo(modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = 25.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize(),
