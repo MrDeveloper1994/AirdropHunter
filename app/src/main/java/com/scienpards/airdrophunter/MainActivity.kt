@@ -26,22 +26,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AirdropHunterTheme(darkTheme = false) {
+            AirdropHunterTheme(darkTheme = true) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        Text("مورد اول", style = MaterialTheme.typography.headlineMedium)
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Text("مورد دوم", style = MaterialTheme.typography.titleSmall)
-                    }
-
+                    Greeting(Modifier.padding(innerPadding))
+                    MainContent(innerPadding)
+//                    GradientText()
                 }
             }
         }
@@ -49,28 +38,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = "",
         modifier = modifier
     )
 }
 
-@Composable
-fun Greet(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Helloooo $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
+//@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     AirdropHunterTheme {
         Column {
-            Greet("Android")
-            Greeting("Android")
+
+            Greeting()
         }
     }
 }
