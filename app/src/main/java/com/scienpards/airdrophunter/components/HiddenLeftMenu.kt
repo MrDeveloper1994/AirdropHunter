@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +43,7 @@ fun HiddenLeftMenu() {
         animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing), label = ""
     )
     val animatedButtonOffset = animateDpAsState(
-        targetValue = if (isMenuVisible.value) 180.dp else (-30).dp,
+        targetValue = if (isMenuVisible.value) 180.dp else (-25).dp,
         animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
     )
 
@@ -51,31 +52,37 @@ fun HiddenLeftMenu() {
             onClick = { isMenuVisible.value = !isMenuVisible.value },
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(0.dp)
                 .width(100.dp)
                 .offset(x = animatedButtonOffset.value),
             colors = ButtonDefaults.buttonColors(
                 MaterialTheme.colorScheme.secondary
             ),
         ) {
-            Text(
-                "منو",
-                modifier = Modifier.padding(start = 15.dp),
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-            AnimatedContent(targetState = isMenuVisible.value, label = "") { isVisible ->
-                if (isVisible) {
-                    Icon(
-                        Icons.Default.Close,
-                        modifier = Modifier.size(30.dp).padding(start = 3.dp),
-                        contentDescription = "Close menu"
-                    )
-                } else {
-                    Icon(
-                        Icons.Default.Menu,
-                        modifier = Modifier.size(30.dp).padding(start = 3.dp),
-                        contentDescription = "Open menu"
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "منو",
+                    color = MaterialTheme.colorScheme.onSecondary
+                )
+                AnimatedContent(targetState = isMenuVisible.value, label = "") { isVisible ->
+                    if (isVisible) {
+                        Icon(
+                            Icons.Default.Close,
+                            modifier = Modifier
+                                .padding(start = 5.dp),
+                            contentDescription = "Close menu"
+                        )
+                    } else {
+                        Icon(
+                            Icons.Default.Menu,
+                            modifier = Modifier
+                                .padding(start = 5.dp),
+                            contentDescription = "Open menu"
+                        )
+                    }
                 }
             }
         }
