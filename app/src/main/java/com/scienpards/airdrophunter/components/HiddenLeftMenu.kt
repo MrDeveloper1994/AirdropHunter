@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -29,22 +28,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 
 @Composable
 fun HiddenLeftMenu() {
+
     val isMenuVisible = remember { mutableStateOf(false) }
-    val menuWidth = 200.dp
+
     val animatedOffset = animateDpAsState(
-        targetValue = if (isMenuVisible.value) 0.dp else -menuWidth,
-        animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing), label = ""
+        targetValue = if (isMenuVisible.value) 0.dp else (-200).dp,
+        animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing), label = "menu"
     )
     val animatedButtonOffset = animateDpAsState(
         targetValue = if (isMenuVisible.value) 180.dp else (-25).dp,
-        animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
+        animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing),
+        label = "button"
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -67,7 +66,7 @@ fun HiddenLeftMenu() {
                     "منو",
                     color = MaterialTheme.colorScheme.onSecondary
                 )
-                AnimatedContent(targetState = isMenuVisible.value, label = "") { isVisible ->
+                AnimatedContent(targetState = isMenuVisible.value, label = "label") { isVisible ->
                     if (isVisible) {
                         Icon(
                             Icons.Default.Close,
@@ -90,7 +89,7 @@ fun HiddenLeftMenu() {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .width(menuWidth)
+                .width(200.dp)
                 .offset(x = animatedOffset.value)
                 .background(MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.small)
 

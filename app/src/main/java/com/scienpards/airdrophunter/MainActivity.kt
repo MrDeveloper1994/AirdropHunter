@@ -7,10 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.scienpards.airdrophunter.ui.theme.AirdropHunterTheme
 import com.scienpards.airdrophunter.ui.theme.LightSecondary
@@ -20,7 +25,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         enableEdgeToEdge()
         window.navigationBarColor = LightSecondary.toArgb()
         window.navigationBarDividerColor = LightSecondary.toArgb()
@@ -29,10 +33,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             AirdropHunterTheme(darkTheme = false) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                val navController = rememberNavController()
-                MainNavigation(navController = navController, modifier = Modifier.padding(innerPadding))
+                    val navController = rememberNavController()
+                    MainNavigation(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+
+                    )
+                }
             }
         }
-    }}
+    }
 }
 

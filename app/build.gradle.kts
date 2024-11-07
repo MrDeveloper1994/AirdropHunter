@@ -2,12 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.kapt)
+//    id("org.jetbrains.kotlin.kapt") version "2.0.0"
+
 }
 
 android {
     namespace = "com.scienpards.airdrophunter"
     compileSdk = 34
-
+//    kapt {
+//        correctErrorTypes = true
+//    }
     defaultConfig {
         applicationId = "com.scienpards.airdrophunter"
         minSdk = 28
@@ -40,7 +45,9 @@ android {
 }
 
 dependencies {
-
+    implementation (libs.androidx.room.runtime)
+//    kapt(libs.androidx.room.compiler)
+    implementation (libs.android.database.sqlcipher)
     implementation (libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -1,4 +1,5 @@
 package com.scienpards.airdrophunter
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -8,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -19,9 +19,9 @@ import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
-fun AirdropHunterLogo(modifier: Modifier ) {
+fun AirdropHunterLogo() {
     var color by remember { mutableStateOf(Color.Blue) }
-    var animationDuration by remember { mutableStateOf(1000L) }
+    var animationDuration by remember { mutableStateOf(4000L) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -51,7 +51,8 @@ fun AirdropHunterLogo(modifier: Modifier ) {
                                 |_|                                      
 """.trimIndent(),
         color = color,
-        modifier = modifier,
+        modifier = Modifier
+            .padding(top = 5.dp),
         style = MaterialTheme.typography.bodyLarge.copy(
             fontSize = 8.sp,
             fontFamily = FontFamily.Monospace,
