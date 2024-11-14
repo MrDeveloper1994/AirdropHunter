@@ -1,5 +1,6 @@
 package com.scienpards.airdrophunter.components
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.indication
@@ -8,9 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,11 +18,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.ripple.rememberRipple
 
 @Composable
 fun CustomHoverButton(onClick: () -> Unit,text: String,style: TextStyle =MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onPrimary  )) {
     var isPressed by remember { mutableStateOf(false) }
-    val interactionSource = remember { MutableInteractionSource() }
+//    val interactionSource = remember { MutableInteractionSource() }
+
     Box(
         modifier = Modifier
             .background(
@@ -46,7 +47,10 @@ fun CustomHoverButton(onClick: () -> Unit,text: String,style: TextStyle =Materia
                     }
                 )
             }
-            .indication(interactionSource, rememberRipple(bounded = true))
+//            .indication(
+//                interactionSource = interactionSource,
+//                indication = LocalIndication.current
+//            )
         ,
         contentAlignment = Alignment.Center
     ) {

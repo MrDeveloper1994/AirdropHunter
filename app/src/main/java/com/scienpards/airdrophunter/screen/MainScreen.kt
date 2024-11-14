@@ -28,7 +28,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,6 +35,7 @@ import androidx.navigation.NavHostController
 import com.scienpards.airdrophunter.AirdropHunterLogo
 import com.scienpards.airdrophunter.components.CustomHoverButton
 import com.scienpards.airdrophunter.components.HiddenLeftMenu
+import com.scienpards.airdrophunter.dataManager.UserModel
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -77,7 +77,9 @@ fun MainScreen(navController: NavHostController) {
                     CustomHoverButton(
                         text = "ثبت نام کاربر",
                         onClick = { navController.navigate("signup") })
-                    CustomHoverButton(text = "حذف کاربر", onClick = {})
+                    CustomHoverButton(
+                        text = "مدیریت کاربران",
+                        onClick = { navController.navigate("userfind") })
                     CustomHoverButton(text = "اطلاعات کاربر", onClick = {})
                     CustomHoverButton(text = "Not Pixel", onClick = {})
                     CustomHoverButton(text = "Circle", onClick = {})
@@ -112,6 +114,7 @@ fun MainScreen(navController: NavHostController) {
                     .background(MaterialTheme.colorScheme.secondary)
             ) {
                 Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {

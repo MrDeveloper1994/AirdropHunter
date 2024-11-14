@@ -1,17 +1,36 @@
 package com.scienpards.airdrophunter.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -22,10 +41,10 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun SignUpUserScreen(navController: NavHostController,userModel:UserModel) {
+fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
     var phoneError by remember { mutableStateOf(false) }
     var phone by remember { mutableStateOf("") }
-    var phoneInt by remember { mutableStateOf<Int?>(null) }
+    var phoneValue by remember { mutableStateOf("") }
     var userId by remember { mutableStateOf("") }
     var userHash by remember { mutableStateOf("") }
     var notPixel by remember { mutableStateOf("") }
@@ -56,19 +75,15 @@ fun SignUpUserScreen(navController: NavHostController,userModel:UserModel) {
             Text(text = "فرم ثبت کاربر", style = MaterialTheme.typography.titleSmall)
 
             TextField(
-                value = phone,
+                value = phoneValue,
                 onValueChange = { newValue ->
 
-                    if (newValue.all { it.isDigit() }) {
-                        phone = newValue
+                        phoneValue = newValue
+                    phoneError = phoneValue.length !in 11..12
 
-                        // تبدیل رشته به عدد صحیح و بررسی طول
-                        phoneInt = newValue.toIntOrNull()
-                        phoneError = phone.length !in 11..12  // شرط برای طول
-                    } else {
-                        phoneError = true  // خطا برای ورودی غیرعدد
-                    }
+
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 label = { Text("phone number") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -130,7 +145,7 @@ fun SignUpUserScreen(navController: NavHostController,userModel:UserModel) {
                         }
                     }
 
-                    /* Handle sign up logic here */
+
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !phoneError && (notPixel.isNotEmpty() || (userId.isNotEmpty() && userHash.isNotEmpty()))
@@ -159,12 +174,18 @@ fun SignUpUserScreen(navController: NavHostController,userModel:UserModel) {
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("ثبت‌نام موفقیت‌آمیز") },
-            text = { Text("ثبت‌نام شما با موفقیت انجام شد!") },
+            text = { Text("!ثبت‌نام شما با موفقیت انجام شد") },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        val newUser = User(phone = phoneInt, userId = userId, userHash = userHash, notPixel = notPixel)
+                        phone = if (phoneValue.startsWith("0")) phoneValue.drop(1) else phoneValue
+                        val newUser = User(
+                            phone = phone.toLongOrNull(),
+                            userId = userId,
+                            userHash = userHash,
+                            notPixel = notPixel
+                        )
+
                         userModel.addUser(newUser)
                         navController.navigate("home") {
                             popUpTo("signup") { inclusive = true }

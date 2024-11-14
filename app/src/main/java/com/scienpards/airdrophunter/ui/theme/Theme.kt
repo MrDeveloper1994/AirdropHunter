@@ -72,6 +72,7 @@ fun AirdropHunterTheme(
         typography = Typography,
         content = content,
         shapes = Shapes(
+            extraSmall = RoundedCornerShape(0.dp),
             small = RoundedCornerShape(8.dp),
             medium = RoundedCornerShape(16.dp),
             large = RoundedCornerShape(24.dp)
