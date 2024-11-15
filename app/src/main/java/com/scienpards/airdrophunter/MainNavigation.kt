@@ -20,7 +20,6 @@ fun MainNavigation(
     NavHost(navController = navController, startDestination = "home", modifier =modifier ) {
 
         composable("home") { MainScreen(navController) }
-//        composable("home") { TestScreen(Modifier.Companion.padding(innerPadding)) }
         composable("signup") { SignUpUserScreen(navController,userModel) }
         composable("userfind") { UserFineScreen(navController,userModel) }
     }

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +32,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.scienpards.airdrophunter.dataManager.UserModel
@@ -54,9 +54,13 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
     val scrollSurfaceState = rememberScrollState()
     var showPhoneError by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+    var showFindUser by remember { mutableStateOf(false) }
     var showProgress by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
+//    LaunchedEffect(Unit) {
+//        val exitedUser = userModel.findUserByPhone(phone)
+//
+//        }
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +82,7 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
                 value = phoneValue,
                 onValueChange = { newValue ->
 
-                        phoneValue = newValue
+                    phoneValue = newValue
                     phoneError = phoneValue.length !in 11..12
 
 
@@ -120,7 +124,6 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
 
                 },
                 label = { Text("User Hash") },
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
             TextField(
@@ -130,7 +133,6 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
                     notPixelError = notPixel.isEmpty()
                 },
                 label = { Text("Not Pixel Url") },
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -141,7 +143,16 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
                         coroutineScope.launch {
                             delay(Random.nextLong(4000, 7000))
                             showProgress = false
-                            showDialog = true
+                            phone =
+                                if (phoneValue.startsWith("0")) phoneValue.drop(1) else phoneValue
+                            val existingUser = userModel.findUserByPhone(phone.toLong())
+                            showProgress = false
+                            if (existingUser == null) {
+                                showDialog = true
+
+                            } else {
+                                showFindUser = true
+                            }
                         }
                     }
 
@@ -178,7 +189,7 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        phone = if (phoneValue.startsWith("0")) phoneValue.drop(1) else phoneValue
+
                         val newUser = User(
                             phone = phone.toLongOrNull(),
                             userId = userId,
@@ -201,6 +212,26 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
                 .padding(16.dp)
                 .shadow(16.dp, shape = MaterialTheme.shapes.medium)
                 .clip(MaterialTheme.shapes.medium)
+                .background(color = MaterialTheme.colorScheme.surface)
         )
     }
+    if (showFindUser) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            text = { Text("!کاربر موردنظر قبلا ثبت نام شده است") },
+            confirmButton = {
+
+            },
+            modifier = Modifier
+                .padding(3.dp)
+                .shadow(16.dp, shape = MaterialTheme.shapes.medium)
+                .clip(MaterialTheme.shapes.medium)
+                .background(color = MaterialTheme.colorScheme.surface)
+        )
+        LaunchedEffect(Unit) {
+            delay(3000)
+            showFindUser = false
+        }
+    }
+
 }

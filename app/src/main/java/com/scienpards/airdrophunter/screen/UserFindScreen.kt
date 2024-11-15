@@ -33,6 +33,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -46,13 +48,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 
 
 @Composable
 fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
-    var searchQuery by remember { mutableStateOf(-1) }
     var searchResult by remember { mutableStateOf<User?>(null) }
     var searchResultAll by remember { mutableStateOf<List<User>>(emptyList()) }
     val users by userModel.users.collectAsState()
@@ -60,24 +59,21 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
     var showDialog by remember { mutableStateOf(false) }
     var showDialogNotFound by remember { mutableStateOf(false) }
     var phoneError by remember { mutableStateOf(false) }
-    var showPhoneError by remember { mutableStateOf(false) }
     var phoneValue by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     var showProgress by remember { mutableStateOf(false) }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             TextField(
                 value = phoneValue,
                 onValueChange = { newQuery ->
-
                     phoneValue = newQuery
-
                     phoneError = phoneValue.length !in 11..12
-
                 },
 
                 label = { Text("شماره موبایل") },
@@ -93,7 +89,6 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
 
                 Button(
                     onClick = {
@@ -140,8 +135,6 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                                 showDialog = true
                             }
                         }
-
-
                     },
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)
@@ -149,11 +142,9 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                         .wrapContentHeight(),
                     shape = RectangleShape
                 ) {
-                    Text("َALl user")
+                    Text("َAll user")
                 }
             }
-
-
             Spacer(modifier = Modifier.height(16.dp))
             if (showDialog) {
                 AlertDialog(
@@ -165,9 +156,15 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                     modifier = Modifier
                         .padding(16.dp)
                         .shadow(16.dp, shape = MaterialTheme.shapes.medium)
-                        .clip(MaterialTheme.shapes.small),
+                        .clip(MaterialTheme.shapes.small)
+                        .background(color = MaterialTheme.colorScheme.surface),
+
                     containerColor = MaterialTheme.colorScheme.surface
                 )
+                LaunchedEffect(Unit) {
+                    delay(3000)
+                    showDialog = false
+                }
             }
             if (showDialogNotFound) {
                 AlertDialog(
@@ -179,13 +176,14 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                     modifier = Modifier
                         .padding(16.dp)
                         .shadow(16.dp, shape = MaterialTheme.shapes.medium)
-                        .clip(MaterialTheme.shapes.small),
+                        .clip(MaterialTheme.shapes.small)
+                        .background(color = MaterialTheme.colorScheme.surface),
                     containerColor = MaterialTheme.colorScheme.surface
                 )
-            }
-            LaunchedEffect(Unit) {
-                delay(4000)
-                showDialogNotFound = false
+                LaunchedEffect(Unit) {
+                    delay(3000)
+                    showDialogNotFound = false
+                }
             }
 
             LazyRow(
@@ -194,18 +192,26 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
             ) {
                 if (searchResult != null) {
                     items(listOf(searchResult!!)) { user ->
-                        UserCard(user = user)
-                    }
+                            UserCard(user = user)
+                        }
+
                 } else if (searchResultAll.isNotEmpty()) {
-                    items(searchResultAll) { user ->
+                    items(users) { user ->
                         UserCard(user = user)
                     }
 
                 }
             }
-
         }
-        DropTarget(modifier = Modifier.align(Alignment.BottomCenter))
+        Spacer(modifier = Modifier.height(80.dp))
+        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+            DropTarget(
+                onUserDeleted =
+                {
+                    searchResult = null
+                }
+            )
+        }
 
     }
 
@@ -222,5 +228,6 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
 
     }
 }
+
 
 

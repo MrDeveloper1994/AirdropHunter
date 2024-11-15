@@ -1,21 +1,17 @@
 package com.scienpards.airdrophunter.components
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,48 +21,51 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.scienpards.airdrophunter.dataManager.UserModel
+import com.scienpards.airdrophunter.models.User
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DropTarget(modifier: Modifier) {
+fun DropTarget( onUserDeleted: () -> Unit) {
     val userModel: UserModel = hiltViewModel()
-    var isDropActive by remember { mutableStateOf(false) }
-    val iconSize by animateDpAsState(
-        targetValue = if (isDropActive) 80.dp else 64.dp // اندازه آیکون
-    )
+//    var isDropActive by remember { mutableStateOf(false) }
+
+//    val iconSize by animateDpAsState(
+//        targetValue = if (isDropActive) 80.dp else 64.dp // اندازه آیکون
+//    )
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
+//            .padding(15.dp)
             .dragAndDropTarget(
                 target = object : DragAndDropTarget {
 
-                    override fun onStarted(event: DragAndDropEvent) {
-                        isDropActive = false
-
-
+                    override fun onEntered(event: DragAndDropEvent) {
+//                        isDropActive = true
                     }
 
-
                     override fun onEnded(event: DragAndDropEvent) {
-
-                        isDropActive = false
-
-
+//                        isDropActive = false
                     }
 
                     override fun onExited(event: DragAndDropEvent) {
-
-                        isDropActive = false
-
-
+//                        isDropActive = false
                     }
 
                     override fun onDrop(event: DragAndDropEvent): Boolean {
-                        isDropActive = false
+
+                        println("onDropped")
+//                        isDropActive = false
                         val clipData = event.toAndroidDragEvent().clipData
                         if (clipData != null && clipData.itemCount > 0) {
                             val data = clipData.getItemAt(0).text.toString()
@@ -74,36 +73,30 @@ fun DropTarget(modifier: Modifier) {
                             val phone = parts
                                 .getOrNull(1)
                                 ?.toLongOrNull()
-//                            println("data ${data} parts ${parts}phone${phone}")
                             if (phone != null) {
                                 userModel.deleteUserByPhone(phone)
+                                onUserDeleted()
+
                             }
                         }
-
                         return true
                     }
 
-                    override fun onEntered(event: DragAndDropEvent) {
 
-                        isDropActive = true
-                    }
                 },
-                shouldStartDragAndDrop = { true }
+                shouldStartDragAndDrop = {
+                    true
+                }
             )
             .background(MaterialTheme.colorScheme.secondary)
+
     ) {
-        LaunchedEffect(isDropActive) {
-            if (isDropActive) {
-                kotlinx.coroutines.delay(3000)
-                isDropActive = false
-            }
-        }
         Icon(
             imageVector = Icons.Default.Delete,
             contentDescription = "Trash Bin",
-            tint = if (isDropActive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+            tint =  MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
-                .size(iconSize)
+                .size(64.dp)
                 .align(Alignment.Center)
         )
     }
