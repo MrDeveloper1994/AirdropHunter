@@ -166,12 +166,6 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
         }
     }
     if (showProgress) {
-//
-//        LaunchedEffect(Unit) {
-//            kotlinx.coroutines.delay(Random.nextLong(4000, 7000))
-//            showProgress = false
-//            showDialog = true
-//        }
 
         Box(
             modifier = Modifier

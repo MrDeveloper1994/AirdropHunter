@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -35,11 +31,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.scienpards.airdrophunter.components.CustomRow
 import com.scienpards.airdrophunter.components.DropTarget
-import com.scienpards.airdrophunter.components.UserCard
+import com.scienpards.airdrophunter.components.DropdownButton
+import com.scienpards.airdrophunter.components.HiddenUserFindMenu
 import com.scienpards.airdrophunter.dataManager.UserModel
 import com.scienpards.airdrophunter.models.User
 import kotlinx.coroutines.CoroutineScope
@@ -61,13 +61,17 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
     var phoneError by remember { mutableStateOf(false) }
     var phoneValue by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    var showProgress by remember { mutableStateOf(false) }
+    var showProgress = remember { mutableStateOf(false) }
+    val isMenuVisible = remember { mutableStateOf(false) }
+    var user by remember { mutableStateOf<User?>(null) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp)
+
         ) {
             TextField(
                 value = phoneValue,
@@ -80,13 +84,15 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .fillMaxWidth()
-
+                    .padding(start = 11.dp, end = 11.dp, top = 15.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(1.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp),
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -98,7 +104,6 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                         if (query != null) {
                             CoroutineScope(Dispatchers.IO).launch {
 
-                                println("Search Query: $query")
                                 val user = userModel.findUserByPhone(query)
                                 withContext(Dispatchers.Main) {
                                     if (user != null) {
@@ -114,20 +119,42 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                         }
                     },
                     modifier = Modifier
-                        .clip(MaterialTheme.shapes.extraSmall)
-                        .width(160.dp)
-                        .wrapContentHeight(),
+                        .clip(MaterialTheme.shapes.extraSmall),
                     shape = RectangleShape
                 ) {
-                    Text("search user")
+                    Text("جستجوی کاربر", maxLines = 1,style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp) )
                 }
+                DropdownButton(
+                    onClick = {
+                        keyboardController?.hide()
+                        val phoneVal =
+                            if (phoneValue.startsWith("0")) phoneValue.drop(1) else phoneValue
 
+                        val query = phoneVal.toLongOrNull()
+                        if (query != null) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                 user = userModel.findUserByPhone(query)
+                                withContext(Dispatchers.Main) {
+                                    if (user != null) {
+                                        isMenuVisible.value =true
+                                    } else {
+                                        showDialogNotFound = true
+                                    }
+                                }
+                            }
+                        } else {
+                            showDialogNotFound = true
+                        }
+
+                    },
+                    isMenuVisible = isMenuVisible,
+                )
                 Button(
                     onClick = {
                         coroutineScope.launch {
-                            showProgress = true
+                            showProgress.value = true
                             delay(Random.nextLong(5000, 6000))
-                            showProgress = false
+                            showProgress.value = false
                             if (users.isNotEmpty()) {
                                 searchResultAll = users
                                 searchResult = null
@@ -137,15 +164,24 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                         }
                     },
                     modifier = Modifier
-                        .clip(MaterialTheme.shapes.extraSmall)
-                        .width(160.dp)
-                        .wrapContentHeight(),
+                        .clip(MaterialTheme.shapes.extraSmall),
+
                     shape = RectangleShape
                 ) {
-                    Text("َAll user")
+                    Text("همه کاربران", maxLines = 1,style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp) )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(3.dp))
+
+            CustomRow(
+                users = users,
+                isMenuVisible = isMenuVisible,
+                result = searchResult,
+                resultAll = searchResultAll,
+                modifier = Modifier.padding(3.dp),
+
+                )
+            HiddenUserFindMenu( isMenuVisible,user,showProgress)
             if (showDialog) {
                 AlertDialog(
                     onDismissRequest = { showDialog = false },
@@ -185,25 +221,23 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                     showDialogNotFound = false
                 }
             }
+            if (showProgress.value) {
 
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (searchResult != null) {
-                    items(listOf(searchResult!!)) { user ->
-                            UserCard(user = user)
-                        }
-
-                } else if (searchResultAll.isNotEmpty()) {
-                    items(users) { user ->
-                        UserCard(user = user)
-                    }
-
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }
-        Spacer(modifier = Modifier.height(80.dp))
+
+
+
+
+
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             DropTarget(
                 onUserDeleted =
@@ -212,10 +246,9 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                 }
             )
         }
-
     }
 
-    if (showProgress) {
+    if (showProgress.value) {
 
         Box(
             modifier = Modifier

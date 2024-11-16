@@ -45,7 +45,7 @@ fun DropTarget( onUserDeleted: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(60.dp)
 //            .padding(15.dp)
             .dragAndDropTarget(
                 target = object : DragAndDropTarget {
@@ -64,7 +64,6 @@ fun DropTarget( onUserDeleted: () -> Unit) {
 
                     override fun onDrop(event: DragAndDropEvent): Boolean {
 
-                        println("onDropped")
 //                        isDropActive = false
                         val clipData = event.toAndroidDragEvent().clipData
                         if (clipData != null && clipData.itemCount > 0) {
