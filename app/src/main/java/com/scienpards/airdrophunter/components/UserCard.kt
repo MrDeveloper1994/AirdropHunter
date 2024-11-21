@@ -28,12 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.models.UserModel
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UserCard(user: User, isMenuVisible: MutableState<Boolean>) {
+fun UserCard(userModel: UserModel, isMenuVisible: MutableState<Boolean>) {
     val scrollSurfaceState = rememberScrollState()
 
     Card(
@@ -48,7 +48,7 @@ fun UserCard(user: User, isMenuVisible: MutableState<Boolean>) {
                         DragAndDropTransferData(
                             clipData = ClipData.newPlainText(
                                 "user_data",
-                                "${user.userId},${user.phone},${user.userHash},${user.notPixel}"
+                                "${userModel.userId},${userModel.phone},${userModel.userHash},${userModel.goats}"
                             ),
                         )
                     )
@@ -79,7 +79,7 @@ fun UserCard(user: User, isMenuVisible: MutableState<Boolean>) {
                     ) {
                         append("Phone : ")
                     }
-                    append(user.phone.toString())
+                    append(userModel.phone.toString())
                 },
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface
@@ -94,7 +94,7 @@ fun UserCard(user: User, isMenuVisible: MutableState<Boolean>) {
                     ) {
                         append("UserId : ")
                     }
-                    append(user.userId.toString())
+                    append(userModel.userId.toString())
                 },
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface
@@ -109,7 +109,7 @@ fun UserCard(user: User, isMenuVisible: MutableState<Boolean>) {
                     ) {
                         append("userHash : ")
                     }
-                    append(user.userHash.toString())
+                    append(userModel.userHash.toString())
                 },
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface
@@ -124,7 +124,7 @@ fun UserCard(user: User, isMenuVisible: MutableState<Boolean>) {
                     ) {
                         append("notPixel : ")
                     }
-                    append(user.notPixel.toString())
+                    append(userModel.goats.toString())
                 },
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface

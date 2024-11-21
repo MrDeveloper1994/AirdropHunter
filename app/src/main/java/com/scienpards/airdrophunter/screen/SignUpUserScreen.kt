@@ -34,21 +34,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.scienpards.airdrophunter.dataManager.UserModel
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.viewModel.UserViewModel
+import com.scienpards.airdrophunter.models.UserModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
+fun SignUpUserScreen(navController: NavHostController, userViewModel: UserViewModel) {
     var phoneError by remember { mutableStateOf(false) }
     var phone by remember { mutableStateOf("") }
     var phoneValue by remember { mutableStateOf("") }
     var userId by remember { mutableStateOf("") }
     var userHash by remember { mutableStateOf("") }
-    var notPixel by remember { mutableStateOf("") }
-    var notPixelError by remember { mutableStateOf(false) }
+    var goats by remember { mutableStateOf("") }
+    var goatsError by remember { mutableStateOf(false) }
     var userIdError by remember { mutableStateOf(false) }
     var userHashError by remember { mutableStateOf(false) }
     val scrollSurfaceState = rememberScrollState()
@@ -127,25 +127,25 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
                 modifier = Modifier.fillMaxWidth()
             )
             TextField(
-                value = notPixel,
+                value = goats,
                 onValueChange = {
-                    notPixel = it
-                    notPixelError = notPixel.isEmpty()
+                    goats = it
+                    goatsError = goats.isEmpty()
                 },
-                label = { Text("Not Pixel Url") },
+                label = { Text("Goats") },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Button(
                 onClick = {
-                    if (!phoneError && (notPixel.isNotEmpty() || (userId.isNotEmpty() && userHash.isNotEmpty()))) {
+                    if (!phoneError && (goats.isNotEmpty() || (userId.isNotEmpty() && userHash.isNotEmpty()))) {
                         showProgress = true
                         coroutineScope.launch {
                             delay(Random.nextLong(4000, 7000))
                             showProgress = false
                             phone =
                                 if (phoneValue.startsWith("0")) phoneValue.drop(1) else phoneValue
-                            val existingUser = userModel.findUserByPhone(phone.toLong())
+                            val existingUser = userViewModel.findUserByPhone(phone.toLong())
                             showProgress = false
                             if (existingUser == null) {
                                 showDialog = true
@@ -159,7 +159,7 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
 
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !phoneError && (notPixel.isNotEmpty() || (userId.isNotEmpty() && userHash.isNotEmpty()))
+                enabled = !phoneError && (goats.isNotEmpty() || (userId.isNotEmpty() && userHash.isNotEmpty()))
             ) {
                 Text(text = "Sign Up")
             }
@@ -184,14 +184,14 @@ fun SignUpUserScreen(navController: NavHostController, userModel: UserModel) {
                 TextButton(
                     onClick = {
 
-                        val newUser = User(
-                            phone = phone.toLongOrNull(),
+                        val newUserModel = UserModel(
+                            phone = phone.toLong(),
                             userId = userId,
                             userHash = userHash,
-                            notPixel = notPixel
+                            goats = goats
                         )
 
-                        userModel.addUser(newUser)
+                        userViewModel.addUser(newUserModel)
                         navController.navigate("home") {
                             popUpTo("signup") { inclusive = true }
                         }

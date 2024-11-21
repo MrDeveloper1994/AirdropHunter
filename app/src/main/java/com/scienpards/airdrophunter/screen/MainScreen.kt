@@ -1,5 +1,6 @@
 package com.scienpards.airdrophunter.screen
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -35,10 +37,10 @@ import androidx.navigation.NavHostController
 import com.scienpards.airdrophunter.AirdropHunterLogo
 import com.scienpards.airdrophunter.components.CustomHoverButton
 import com.scienpards.airdrophunter.components.HiddenLeftMenu
-import com.scienpards.airdrophunter.dataManager.UserModel
+import com.scienpards.airdrophunter.components.RealTimeInternetSpeed
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, context: Context) {
 
 
     val scrollSurfaceState = rememberScrollState()
@@ -79,14 +81,15 @@ fun MainScreen(navController: NavHostController) {
                         onClick = { navController.navigate("signup") })
                     CustomHoverButton(
                         text = "مدیریت کاربران",
-                        onClick = { navController.navigate("userfind") })
-                    CustomHoverButton(text = "اطلاعات کاربر", onClick = {})
-                    CustomHoverButton(text = "Not Pixel", onClick = {})
-                    CustomHoverButton(text = "Circle", onClick = {})
-                    CustomHoverButton(text = "Major", onClick = {})
-                    CustomHoverButton(text = "Blum", onClick = {})
-                    CustomHoverButton(text = "Blum", onClick = {})
-                    CustomHoverButton(text = "Blum", onClick = {})
+                        onClick = { navController.navigate("userManager") })
+                    CustomHoverButton(
+                        text = "لاگ مینی اپ ها",
+                        onClick = { navController.navigate("miniApp") })
+//                    CustomHoverButton(text = "Circle", onClick = { navController.navigate("circle") })
+                    CustomHoverButton(
+                        text = "اعلامیه ها ",
+                        onClick = { navController.navigate("circle") })
+
                     Spacer(modifier = Modifier.height(60.dp))
                 }
             }
@@ -95,14 +98,32 @@ fun MainScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .align(Alignment.TopCenter)
-                    .horizontalScroll(logoScrollState)
-                    .background(MaterialTheme.colorScheme.secondary)
+
             ) {
 
-                Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                    Spacer(modifier = Modifier.width(50.dp))
-                    AirdropHunterLogo()
-                    Spacer(modifier = Modifier.width(50.dp))
+                Column(Modifier.wrapContentSize()) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(15.dp),
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                            .horizontalScroll(logoScrollState)
+                    ) {
+                        Spacer(modifier = Modifier.width(50.dp))
+                        AirdropHunterLogo()
+                        Spacer(modifier = Modifier.width(50.dp))
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(15.dp),
+                        modifier = Modifier.fillMaxWidth().background(
+                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
+                        )
+                    ) {
+                        Spacer(modifier = Modifier.width(50.dp))
+                        RealTimeInternetSpeed(context)
+                        Spacer(modifier = Modifier.width(50.dp))
+                    }
                 }
             }
 

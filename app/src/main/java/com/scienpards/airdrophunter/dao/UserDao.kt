@@ -5,35 +5,35 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.models.UserModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
     @Insert
-    suspend fun insertUser(user: User)
+    suspend fun insertUser(userModel: UserModel)
 
     @Query("SELECT * FROM users")
-    fun getAllUsers(): Flow<List<User>>
+    fun getAllUsers(): Flow<List<UserModel>>
 
 
     @Delete
-    suspend fun deleteUser(user: User)
+    suspend fun deleteUser(userModel: UserModel)
 
 
     @Update
-    suspend fun updateUser(user: User)
+    suspend fun updateUser(userModel: UserModel)
 
 
     @Query("SELECT * FROM users WHERE phone = :phone LIMIT 1")
-    suspend fun findUserByPhone(phone: Long): User?
+    suspend fun findUserByPhone(phone: Long): UserModel?
 
 
     @Query("DELETE FROM users WHERE phone = :phone")
     suspend fun deleteUserByPhone(phone: Long)
 
 
-    @Query("UPDATE users SET userId = :userId, userHash = :userHash, notPixel = :notPixel WHERE phone = :phone")
+    @Query("UPDATE users SET userId = :userId, userHash = :userHash, goats = :notPixel WHERE phone = :phone")
     suspend fun updateUserByPhone(phone: Long, userId: String?, userHash: String?, notPixel: String?)
 
 }

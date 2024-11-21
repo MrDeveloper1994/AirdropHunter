@@ -40,8 +40,8 @@ import com.scienpards.airdrophunter.components.CustomRow
 import com.scienpards.airdrophunter.components.DropTarget
 import com.scienpards.airdrophunter.components.DropdownButton
 import com.scienpards.airdrophunter.components.HiddenUserFindMenu
-import com.scienpards.airdrophunter.dataManager.UserModel
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.viewModel.UserViewModel
+import com.scienpards.airdrophunter.models.UserModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -51,10 +51,10 @@ import kotlin.random.Random
 
 
 @Composable
-fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
-    var searchResult by remember { mutableStateOf<User?>(null) }
-    var searchResultAll by remember { mutableStateOf<List<User>>(emptyList()) }
-    val users by userModel.users.collectAsState()
+fun UserFineScreen(navController: NavHostController, userViewModel: UserViewModel) {
+    var searchResult by remember { mutableStateOf<UserModel?>(null) }
+    var searchResultAll by remember { mutableStateOf<List<UserModel>>(emptyList()) }
+    val users by userViewModel.users.collectAsState()
     var phone by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var showDialogNotFound by remember { mutableStateOf(false) }
@@ -63,7 +63,7 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
     val coroutineScope = rememberCoroutineScope()
     var showProgress = remember { mutableStateOf(false) }
     val isMenuVisible = remember { mutableStateOf(false) }
-    var user by remember { mutableStateOf<User?>(null) }
+    var userModel by remember { mutableStateOf<UserModel?>(null) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -104,7 +104,7 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                         if (query != null) {
                             CoroutineScope(Dispatchers.IO).launch {
 
-                                val user = userModel.findUserByPhone(query)
+                                val user = userViewModel.findUserByPhone(query)
                                 withContext(Dispatchers.Main) {
                                     if (user != null) {
                                         searchResult = user
@@ -133,9 +133,9 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
                         val query = phoneVal.toLongOrNull()
                         if (query != null) {
                             CoroutineScope(Dispatchers.IO).launch {
-                                 user = userModel.findUserByPhone(query)
+                                 userModel = userViewModel.findUserByPhone(query)
                                 withContext(Dispatchers.Main) {
-                                    if (user != null) {
+                                    if (userModel != null) {
                                         isMenuVisible.value =true
                                     } else {
                                         showDialogNotFound = true
@@ -174,14 +174,14 @@ fun UserFineScreen(navController: NavHostController, userModel: UserModel) {
             Spacer(modifier = Modifier.height(3.dp))
 
             CustomRow(
-                users = users,
+                userModels = users,
                 isMenuVisible = isMenuVisible,
                 result = searchResult,
                 resultAll = searchResultAll,
                 modifier = Modifier.padding(3.dp),
 
                 )
-            HiddenUserFindMenu( isMenuVisible,user,showProgress)
+            HiddenUserFindMenu( isMenuVisible,userModel,showProgress)
             if (showDialog) {
                 AlertDialog(
                     onDismissRequest = { showDialog = false },

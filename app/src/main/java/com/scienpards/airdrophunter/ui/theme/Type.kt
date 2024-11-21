@@ -63,6 +63,11 @@ val Typography = Typography(
         fontFamily = IranSansFontFamily
     ),
     bodySmall = TextStyle(
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        fontFamily = FontFamily.Monospace
+    ),
+    labelMedium = TextStyle(
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
         fontFamily = IranSansFontFamily

@@ -41,8 +41,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.scienpards.airdrophunter.dataManager.UserModel
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.viewModel.UserViewModel
+import com.scienpards.airdrophunter.models.UserModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -51,10 +51,10 @@ import kotlin.random.Random
 @Composable
 fun HiddenUserFindMenu(
     isMenuVisible: MutableState<Boolean>,
-    user: User?,
+    userModel: UserModel?,
     showProgress: MutableState<Boolean>
 ) {
-    println("user2 ${user?.phone}")
+    println("user2 ${userModel?.phone}")
 
     var phoneError by remember { mutableStateOf(false) }
     var phone by rememberSaveable { mutableStateOf("") }
@@ -70,23 +70,23 @@ fun HiddenUserFindMenu(
     var showFindUser by remember { mutableStateOf(false) }
     val scrollMenu = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
-    val userModel: UserModel = hiltViewModel()
+    val userViewModel: UserViewModel = hiltViewModel()
 
     val animatedOffset = animateDpAsState(
         targetValue = if (isMenuVisible.value) (0).dp else (250).dp,
         animationSpec = tween(durationMillis = 1500, easing = LinearOutSlowInEasing), label = "menu"
     )
-    LaunchedEffect(user?.phone) {
-        phoneValue = "${(user?.phone) ?: ""}"
+    LaunchedEffect(userModel?.phone) {
+        phoneValue = "${(userModel?.phone) ?: ""}"
     }
-    LaunchedEffect(user?.userId) {
-        userId = "${(user?.userId) ?: ""}"
+    LaunchedEffect(userModel?.userId) {
+        userId = "${(userModel?.userId) ?: ""}"
     }
-    LaunchedEffect(user?.userHash) {
-        userHash = "${(user?.userHash) ?: ""}"
+    LaunchedEffect(userModel?.userHash) {
+        userHash = "${(userModel?.userHash) ?: ""}"
     }
-    LaunchedEffect(user?.notPixel) {
-        notPixel = "${(user?.notPixel) ?: ""}"
+    LaunchedEffect(userModel?.goats) {
+        notPixel = "${(userModel?.goats) ?: ""}"
     }
     Column (
         modifier = Modifier
@@ -232,7 +232,7 @@ fun HiddenUserFindMenu(
                 TextButton(
                     onClick = {
                         coroutineScope.launch {
-                            userModel.updateUserByPhone(
+                            userViewModel.updateUserByPhone(
                                 phone.toLong(),
                                 userId = userId,
                                 userHash = userHash,

@@ -54,7 +54,6 @@ android {
 dependencies {
 
     implementation (libs.androidx.profileinstaller)
-
     implementation (libs.accompanist.navigation.animation)
     implementation(libs.foundation)
     implementation(libs.material3)

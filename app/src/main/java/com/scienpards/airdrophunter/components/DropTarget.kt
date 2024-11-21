@@ -12,31 +12,19 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.scienpards.airdrophunter.dataManager.UserModel
-import com.scienpards.airdrophunter.models.User
-import kotlin.math.pow
-import kotlin.math.sqrt
+import com.scienpards.airdrophunter.viewModel.UserViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DropTarget( onUserDeleted: () -> Unit) {
-    val userModel: UserModel = hiltViewModel()
+    val userViewModel: UserViewModel = hiltViewModel()
 //    var isDropActive by remember { mutableStateOf(false) }
 
 //    val iconSize by animateDpAsState(
@@ -73,7 +61,7 @@ fun DropTarget( onUserDeleted: () -> Unit) {
                                 .getOrNull(1)
                                 ?.toLongOrNull()
                             if (phone != null) {
-                                userModel.deleteUserByPhone(phone)
+                                userViewModel.deleteUserByPhone(phone)
                                 onUserDeleted()
 
                             }

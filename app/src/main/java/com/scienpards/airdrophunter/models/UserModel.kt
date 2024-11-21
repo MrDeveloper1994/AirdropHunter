@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
-data class User(
+data class UserModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val phone: Long?,
+    val phone: Long,
     val userId: String?,
     val userHash: String?,
-    val notPixel: String?
+    val goats: String
 )

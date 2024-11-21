@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.scienpards.airdrophunter.dao.LogDao
 import com.scienpards.airdrophunter.dao.UserDao
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.models.Log
+import com.scienpards.airdrophunter.models.UserModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,10 +16,10 @@ import dagger.hilt.components.SingletonComponent
 import net.sqlcipher.database.SupportFactory
 import javax.inject.Singleton
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [UserModel::class,Log::class], version = 3, exportSchema = false)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
-
+    abstract fun logDao(): LogDao
 }
 
 @Module
@@ -43,6 +45,7 @@ object DatabaseModule {
             UserDatabase::class.java,
             "encrypted_users.db"
         )
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .openHelperFactory(factory)
             .build()
     }
@@ -50,5 +53,10 @@ object DatabaseModule {
     @Provides
     fun provideUserDao(database: UserDatabase): UserDao {
         return database.userDao()
+    }
+
+    @Provides
+    fun provideLogDao(database: UserDatabase): LogDao {
+        return database.logDao()
     }
 }

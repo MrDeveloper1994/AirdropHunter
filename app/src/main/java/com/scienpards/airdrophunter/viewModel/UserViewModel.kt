@@ -1,45 +1,44 @@
-package com.scienpards.airdrophunter.dataManager
+package com.scienpards.airdrophunter.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.scienpards.airdrophunter.dao.UserDao
-import com.scienpards.airdrophunter.models.User
+import com.scienpards.airdrophunter.models.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UserModel @Inject constructor(
+class UserViewModel @Inject constructor(
     private val userDao: UserDao
 ) : ViewModel() {
 
-    val users: StateFlow<List<User>> = userDao.getAllUsers()
+    val users: StateFlow<List<UserModel>> = userDao.getAllUsers()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 
 
 
-    fun addUser(user: User) {
+    fun addUser(userModel: UserModel) {
         viewModelScope.launch {
-            userDao.insertUser(user)
+            userDao.insertUser(userModel)
         }
     }
 
-    fun deleteUser(user: User) {
+    fun deleteUser(userModel: UserModel) {
         viewModelScope.launch {
-            userDao.deleteUser(user)
+            userDao.deleteUser(userModel)
 
         }
     }
 
 
-    fun editUser(user: User) {
+    fun editUser(userModel: UserModel) {
         viewModelScope.launch {
-            userDao.updateUser(user)
+            userDao.updateUser(userModel)
         }
     }
 
@@ -57,7 +56,7 @@ class UserModel @Inject constructor(
     }
 
 
-    suspend fun findUserByPhone(phone: Long): User? {
+    suspend fun findUserByPhone(phone: Long): UserModel? {
         return userDao.findUserByPhone(phone)
     }
 
